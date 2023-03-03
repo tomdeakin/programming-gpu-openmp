@@ -1,0 +1,17 @@
+# for AMD AOMP compiler on linux
+# copy to make.def
+CC         = aompcc
+INSTALLED_GPU  = $(shell $(dir $(shell which $(CC)))mygpu -d gfx906)
+UNAME = $(shell uname -m)
+CPP         = $(CC)
+OPTFLAGS   = -O3 -fopenmp
+
+CLINKER     = $(dir $(shell which $(CC)))clang
+LIBS        = -O3 -target $(UNAME)-pc-linux-gnu -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=$(INSTALLED_GPU)
+
+CFLAGS    = $(OPTFLAGS)
+PRE= ./
+OBJ=o
+EXE=
+RM=rm -f
+

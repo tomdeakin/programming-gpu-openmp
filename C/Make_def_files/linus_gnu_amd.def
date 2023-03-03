@@ -1,0 +1,14 @@
+# for gcc compiler on Linux targetting AMD GPUs
+# Note: you may need to specify the gfx??? number for your specific GPU. gfx906 is for Radeon VII.
+# copy to make.def
+CC          = gcc
+CLINKER     = $(CC)
+OPTFLAGS    = -O3 -fopenmp -foffload=amdgcn-amdhsa -foffload=-march=gfx906
+LIBS        = -lm
+PRE         = ./
+
+CFLAGS	  = $(OPTFLAGS)
+
+OBJ=o
+EXE=
+RM=rm

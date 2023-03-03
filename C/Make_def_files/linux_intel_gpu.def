@@ -1,0 +1,21 @@
+# for intel compiler on linux 
+#
+#  Remember that before using this make.def, you need:
+#
+# source /nfs/software/x86_64/inteloneapi-beta/2021.1.8/setvars.sh
+# module load intel/neo
+#
+# https://software.intel.com/content/www/us/en/develop/documentation/get-started-with-cpp-fortran-compiler-openmp/top.html
+# copy to make.def
+CC         = icx
+CPP         = $(CC)
+OPTFLAGS   = -O3 -fiopenmp -fopenmp-targets=spir64
+
+CLINKER     = $(CC)
+LIBS        = -lm
+
+CFLAGS    = $(OPTFLAGS)
+PRE= ./
+OBJ=o
+EXE=
+RM=rm

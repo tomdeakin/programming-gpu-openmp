@@ -1,0 +1,14 @@
+# for gnu compiler on linux 
+#
+CC         = gcc-9
+CPP         = $(CC)
+OPTFLAGS   = -O3 -fopenmp 
+
+CLINKER     = $(CC)
+LIBS        = -lm
+
+CFLAGS    = $(OPTFLAGS)
+PRE= ./
+OBJ=o
+EXE=
+RM=rm
