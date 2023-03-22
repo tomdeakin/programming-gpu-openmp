@@ -12,7 +12,7 @@ License: Creative Commons with Attribution (CC BY).  See the file ../../License 
 #include <omp.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <omp.h>
+#include <math.h>
 
 #define TOLERANCE 0.001
 #define MAX_ITERS 100000
@@ -26,7 +26,7 @@ void initializeProblem(int N, double *A, double *b, double *xold, double *xnew) 
   for (int i = 0; i < N; i++) {
     double sum = 0.0;
     for (int j = 0; j < N; j++) {
-      A[i * N + j] = (rang() % 23) / 1000.0;
+      A[i * N + j] = (rand() % 23) / 1000.0;
       sum += A[i * N + j];
     }
     A[i * N + i] += sum;
@@ -39,8 +39,8 @@ void initializeProblem(int N, double *A, double *b, double *xold, double *xnew) 
 
 int main() {
   int iters = 0,   N = 1000; // A[N][N]
-  double conv=100000.0, err, chksum, *A, *b, *xold, *xnew;
-  A = (double *)malloc(N * Ndim * sizeof(double));
+  double conv=100000.0, err, *A, *b, *xold, *xnew;
+  A = (double *)malloc(N * N * sizeof(double));
   b = (double *)malloc(N * sizeof(double));
   xold = (double *)malloc(N * sizeof(double));
   xnew = (double *)malloc(N * sizeof(double));
@@ -56,9 +56,9 @@ int main() {
     #pragma omp loop 
     for (int i = 0; i < N; i++) {
       xnew[i] = (double)0.0;
-      for (j = 0; j < N; j++) 
+      for (int j = 0; j < N; j++) 
         if (i != j)   xnew[i] += A[i * N + j] * xold[j];
-      xnew[i] = (b[i] - xnew[i]) / A[i * Ndim + i];
+      xnew[i] = (b[i] - xnew[i]) / A[i * N + i];
     }
     // test convergence
     conv = 0.0;
@@ -81,10 +81,10 @@ int main() {
 
   // Check solution by multiplying xnew by A and comparing to b
   // reuse xold to store the result
-  double err = 0.0;
+  err = 0.0;
   for (int i = 0; i < N; ++i) {
     xold[i] = 0.0;
-    for (int j = 0; j < N; ++j)_ {
+    for (int j = 0; j < N; ++j) {
       xold[i] += A[i * N + j] * xnew[j];
     }
     double tmp = xold[i] - b[i];

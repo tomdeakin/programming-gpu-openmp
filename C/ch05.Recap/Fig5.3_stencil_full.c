@@ -31,13 +31,14 @@
 */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <math.h>
 #include <omp.h>
 
 #define PI acos(-1.0) // Pi
 
 // Sets the mesh to an initial value, determined by a MMS scheme
-void initial_value(const int n, const double dx, const double length, double * restrict u) {
+void initial_values(const int n, const double dx, const double length, double * restrict u) {
   double y = dx;
   for (int j = 0; j < n; ++j) {
     double x = dx; // Physical x position
@@ -64,7 +65,7 @@ int main(int argc, char *argv[]) {
   double dx = length/(n+1);// physical size of each cell  
   double dt = 0.5 / nsteps;	// time interval (total time of 0.5s)
   double r = alpha * dt / (dx * dx); // Stability
-  if (r > 0.5) print("WARNING: Unstable!\n");
+  if (r > 0.5) printf("WARNING: Unstable!\n");
 
   // Allocate two nxn grids
   double *u  = malloc(sizeof(double)*n*n);
@@ -77,11 +78,11 @@ int main(int argc, char *argv[]) {
   const double r2 = 1.0 - 4.0*r;
   for (int t = 0; t < nsteps; ++t) {
   
-  #pragma omp target map(tofrom: u[0:n*n], utmp[0:n*n])
+  #pragma omp target map(tofrom: u[0:n*n], u_tmp[0:n*n])
   #pragma omp loop collapse(2)
     for (int i = 0; i < n; ++i) {
       for (int j = 0; j < n; ++j) {
-        utmp[i+j*n] =  r2 * u[i+j*n] +
+        u_tmp[i+j*n] =  r2 * u[i+j*n] +
         r * ((i < n-1) ? u[i+1+j*n] : 0.0) +
         r * ((i > 0)   ? u[i-1+j*n] : 0.0) +
         r * ((j < n-1) ? u[i+(j+1)*n] : 0.0) +
@@ -90,13 +91,13 @@ int main(int argc, char *argv[]) {
     }
     // Pointer swap
     tmp = u;
-    u = utmp;
+    u = u_tmp;
     u_tmp = tmp;
   }
 
   // Check solution against the known solution defined by the MMS
   double l2norm = 0.0;
-  double time = dt * double (nsteps); // total time
+  double t = dt * (double)nsteps; // total time
   double y = dx;
   for (int i = 0; i < n; ++i) {
     double x = dx;
@@ -107,7 +108,7 @@ int main(int argc, char *argv[]) {
       l2norm += tmp * tmp;
       x += dx;
     }
-    y += dy;
+    y += dx;
   }
   l2norm = sqrt(l2norm);
 

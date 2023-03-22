@@ -20,7 +20,7 @@ jacobi$(EXE): Fig5.1_JacobiSolver_full.$(OBJ)
 jacobi2$(EXE): Fig5.2_JacobiSolver2_full.$(OBJ)
 	$(CLINKER) $(CFLAGS) -o jacobi2$(EXE) Fig5.2_JacobiSolver2_full.$(OBJ) $(LIBS)
 
-stencil$(EXE): Fig5.3_stencil_full.c.$(OBJ)
+stencil$(EXE): Fig5.3_stencil_full.$(OBJ)
 	$(CLINKER) $(CFLAGS) -o stencil$(EXE) Fig5.3_stencil_full.$(OBJ) $(LIBS)
 
 test: $(EXES)
