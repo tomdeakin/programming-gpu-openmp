@@ -1,0 +1,23 @@
+#pragma omp target enter data map(to: u[0:n*n], utmp[0:n*n])
+for (int t = 0; t < nsteps; ++t) {
+
+  #pragma omp target 
+  #pragma omp loop collapse(2)
+  for (int i = 0; i < n; ++i) {
+      for (int j = 0; j < n; ++j) {
+      
+      utmp[i+j*n] =  r2 * u[i+j*n] +
+      r * ((i < n-1) ? u[i+1+j*n] : 0.0) +
+      r * ((i > 0)   ? u[i-1+j*n] : 0.0) +
+      r * ((j < n-1) ? u[i+(j+1)*n] : 0.0) +
+      r * ((j > 0)   ? u[i+(j-1)*n] : 0.0);
+    }
+  }
+  // Pointer swap
+  tmp = u;
+  u = utmp;
+  utmp = tmp;
+}
+#pragma omp target exit data map(from: u[0:n*n])
+
+
