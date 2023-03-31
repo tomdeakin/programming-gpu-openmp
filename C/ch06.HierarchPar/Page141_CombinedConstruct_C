@@ -1,0 +1,7 @@
+
+// The first combined construct shown on the page is
+teams distrubute
+
+// Then, we show the combined construct as follows
+parallel for collapse(2)
+

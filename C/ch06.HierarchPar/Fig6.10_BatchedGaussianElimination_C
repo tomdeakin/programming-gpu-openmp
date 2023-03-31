@@ -1,0 +1,31 @@
+
+#pragma omp target
+#pragma omp teams distribute
+for (int l = 0; l < L; ++l) { // loop over batch
+  // Triangulation step
+  // Subtract multiples of rows from top to bottom
+  for (int j = 0; j < N; ++j) { // Loop over rows
+    const double Ajj = A[N*N*l + N*j + j]; // Diagonal value
+    if (Ajj != 0.0) {
+      for (int i = j+1; i < N; ++i) { // Loop over rows beneath jth row
+        const double c = A[N*N*l + N*i + j] / Ajj;
+        #pragma omp parallel for
+        for (int k = 0; k < N; ++k) { // Loop over entries in row
+            A[N*N*l + N*i + k] -= c * A[N*N*l + N*j + k];
+        } // implicit barrier
+        b[N*l + i] -= c * b[N*l + j];
+      }
+    }
+  }
+
+  // Backwards substitution
+  for (int j = N-1; j >= 0; --j) {
+    x[N*l + j] = b[N*l + j] / A[N*N+l + N*j + j];
+    #pragma omp parallel for
+    for (int i = 0; i < j; ++i) {
+      b[N*l + i] -= x[N*l + j] * A[N*N*l + N*i + j];
+      A[N*N*l + N*i + j] = 0.0;
+    } // implicit barrier
+  }
+} // end of batch loop
+

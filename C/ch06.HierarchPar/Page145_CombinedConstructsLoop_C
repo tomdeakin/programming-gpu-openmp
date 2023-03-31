@@ -1,0 +1,15 @@
+// We show a number of constructs on this page
+target teams loop
+target parallel loop
+teams loop
+
+#pragma omp target
+#pragma omp loop
+
+#pragma target teams loop
+
+#pragma omp target map(to:A[0:N]) \
+    map(tofrom:B[0:N*N]) \
+    map(from:C[0:N*N])
+#pragma omp teams loop collapse(2)
+

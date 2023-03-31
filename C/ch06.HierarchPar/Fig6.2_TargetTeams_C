@@ -1,0 +1,7 @@
+
+#pragma omp target
+#pragma omp teams
+{
+  // Target region executed by threads in multiple teams
+}
+

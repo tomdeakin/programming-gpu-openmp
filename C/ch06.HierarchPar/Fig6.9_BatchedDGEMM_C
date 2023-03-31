@@ -1,0 +1,17 @@
+
+#pragma omp target
+#pragma omp teams distribute
+for (int l = 0; l < L; ++l) { // loop over batch
+
+  // Compute C_l = A_l x B_l
+  #pragma omp parallel for collapse(2)
+  for (int i = 0; i < N; ++i) {
+    for (int j = 0; j < M; ++j) {
+      for (int k = 0; k < P; ++k) {
+        C[l*N*M + i*M + j] += 
+          A[l*N*P + i*P + k] * B[l*P*M + k*N + j];
+      }
+    }
+  }
+}
+

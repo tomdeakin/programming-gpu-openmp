@@ -1,0 +1,7 @@
+
+// The first directive shown on the page is
+#pragma omp teams distribute parallel for simd
+
+// At the bottom of the page, the directive shown is
+#pragma omp loop
+

@@ -1,0 +1,12 @@
+
+#pragma omp target
+#pragma omp teams loop
+for (int i = 0; i < N; ++i) {
+  // code here is executed by each team
+
+  #pragma omp loop bind(parallel)
+  for (int j = 0; j < M; ++j) {
+    // code here is executed by the threads in the team
+  }
+}
+
