@@ -1,0 +1,12 @@
+
+struct point {
+  double x, y;
+};
+
+struct point p = {.real = 0.0, .imag = 0.0};
+
+#pragma omp target defaultmap(firstprivate: aggregate)
+{
+  // p is a firstprivate variable
+}
+

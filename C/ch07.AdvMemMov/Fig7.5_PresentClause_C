@@ -1,0 +1,22 @@
+
+void allocate(double **A, int N) {
+  *A = malloc(sizeof(double) * N);
+  // BUG! Forgotten to allocate in device data environment too
+  // #pragma omp target enter data map(alloc: (*A)[0:N])
+}
+
+int main(void) {
+
+  double *A; int N = 10000;
+  allocate(&A, N);
+
+  for (int t = 0; t < 100000; ++t) {
+    #pragma omp target map(present, tofrom:A[0:N])
+    {
+      // target region using A
+    }
+  }
+
+  check_solution(A,N);
+}
+

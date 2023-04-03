@@ -1,0 +1,6 @@
+
+struct span {
+  int N;
+  double *ptr;
+};
+

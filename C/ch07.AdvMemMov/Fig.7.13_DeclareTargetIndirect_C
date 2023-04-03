@@ -1,0 +1,20 @@
+
+float identity(float x) { return x;}
+float step(float x) { return (x < 0.0f) ? 0.0f : 1.0f; }
+float hytan(float x) { return (expf(x) - expf(-x)) / (expf(x) + expf(-x)); }
+
+#pragma omp declare target enter(identity, step, hytan) indirect(1)
+
+// Choose an activation function (activate is a function pointer)
+float (*activate)(float) = hytan;
+
+int N = 100000;
+float *input, *output;
+alloc_init(&input, &output, N);
+
+// Use the activation function indirectly in a target region
+#pragma omp target map(to: input[:N]) map(from: output[:N])
+for (int i = 0; i < N; ++i) {
+  output[i] = activate(input[i]);
+}
+

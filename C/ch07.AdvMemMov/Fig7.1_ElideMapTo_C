@@ -1,0 +1,13 @@
+
+int N = 10000;
+double *A = malloc(sizeof(double) * N);
+init(A, N);
+
+#pragma omp target data map(tofrom: A[0:N])
+{
+  #pragma omp target map(to: A[0:N])
+  {
+    // Use A
+  }
+}
+

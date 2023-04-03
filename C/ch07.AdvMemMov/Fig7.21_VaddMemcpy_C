@@ -1,0 +1,22 @@
+
+extern int host_id;
+extern int dev_id;
+
+int N = 1000000;
+double *A = omp_target_malloc(sizeof(double)*N, dev_id);
+double *B = omp_target_malloc(sizeof(double)*N, dev_id);
+double *C = omp_target_malloc(sizeof(double)*N, dev_id);
+
+init(A,B,C,N);
+
+#pragma omp target is_device_ptr(A,B,C)
+#pragma omp loop
+for (int i = 0; i < N; ++i)
+  C[i] = A[i] + B[i];
+
+double *result = malloc(sizeof(double)*N);
+
+omp_target_memcpy(result, C, sizeof(double)*N, 0, 0, host_id, dev_id);
+
+check_solution(result, N);
+

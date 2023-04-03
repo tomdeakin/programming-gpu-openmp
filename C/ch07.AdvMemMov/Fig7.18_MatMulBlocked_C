@@ -1,0 +1,27 @@
+
+#define BSIZE 32
+
+// Number of block in each dimension
+int Nblk = Ndim / Bsize;
+int Mblk = Mdim / Bsize;
+int Pblk = Pdim / Bsize;
+
+// Loop over blocks of matrix C
+for (int ib = 0; ib < Nblk; ib++) {
+  for (int jb = 0; jb < Mblk; jb++) {
+
+    // Loop over blocks of rows of A
+    for (kb = 0; kb < Pblk; kb++) {
+
+      // Matrix multiplication within a block
+      for (i = ib * Bsize; i < ((ib+1)*Bsize); i++) {
+        for (j = jb * Bsize; j < ((jb+1)*Bsize); j++) {
+          for(k = kb * Bsize; k < ((kb+1)*Bsize); k++) {
+            C[i*Mdim+j] += Awrk[i*Pdim + k] * B[k*Mdim+j];
+          }
+        }
+      }
+    }
+  }
+}
+

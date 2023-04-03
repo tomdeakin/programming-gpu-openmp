@@ -1,0 +1,9 @@
+
+for (int i = 0; i < N; i++) {
+  for (int j = 0; j < N; j++) {
+    for(int k = 0; k < N; k++) {
+      C[i*Mdim+j] += A[i*Pdim+k] * B[k*Mdim+j];
+    }
+  }
+}
+

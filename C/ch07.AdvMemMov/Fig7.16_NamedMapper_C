@@ -1,0 +1,12 @@
+
+struct span {
+  int N;
+  double *ptr;
+};
+
+#pragma omp declare mapper (struct span s) map(tofrom: s, s.ptr[0:s.N])
+                       
+#pragma omp declare mapper (left: struct span s) map(tofrom: s.N, s.ptr[0:s.N/2])
+                       
+#pragma omp declare mapper (right: struct span s) map(tofrom: s.N, s.ptr[s.N/2:s.N/2])
+

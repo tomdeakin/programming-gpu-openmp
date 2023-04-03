@@ -1,0 +1,11 @@
+
+int N = 10;
+int M = 11;
+#pragma omp target data map(tofrom: N)
+{
+  int dev = omp_get_default_device();
+  int N_here = omp_target_is_present(&N, dev);
+  int M_here = omp_target_is_present(&M, dev);
+  printf("N: %d, M: %d\n", N_here, M_here);
+}
+

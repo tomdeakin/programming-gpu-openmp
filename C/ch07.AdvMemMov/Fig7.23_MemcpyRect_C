@@ -1,0 +1,19 @@
+
+double *arr = omp_target_alloc(sizeof(double)*8*5, dev_id);
+double *center = malloc(sizeof(double)*6*3);
+
+init(arr);
+
+// Amount of data to copy
+size_t volume[2] = {6, 3};
+
+// Offset from corner of array
+size_t dst_offsets[2] = {0, 0};
+size_t src_offsets[2] = {1, 1};
+
+// Dimensions of the allocations
+size_t dst_dimensions[2] = {6, 3};
+size_t src_dimensions[2] = {8, 5};
+
+omp_target_memcpy_rect(center, arr, sizeof(double), 2, volume, dst_offsets, src_offsets, dst_dimensions, src_dimensions, host_id, dev_id);
+

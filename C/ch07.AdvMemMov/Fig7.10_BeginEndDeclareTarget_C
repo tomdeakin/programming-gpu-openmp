@@ -1,0 +1,7 @@
+
+#pragma omp begin declare target
+float identity(float x) { return x;}
+float step(float x) { return (x < 0.0f) ? 0.0f : 1.0f; }
+float hytan(float x) { return (expf(x) - expf(-x)) / (expf(x) + expf(-x)); }
+#pragma omp end declare target
+

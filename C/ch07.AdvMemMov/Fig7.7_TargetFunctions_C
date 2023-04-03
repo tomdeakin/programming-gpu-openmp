@@ -1,0 +1,12 @@
+
+float identity(float x) { return x;}
+
+int N = 1024;
+float * A = malloc(sizeof(float) * N);
+initalize(A, N); // Some external routine run on the host
+
+#pragma omp target map(tofrom: A[:N])
+#pragma omp loop
+for (int i = 0; i < N; ++i)
+  A[i] = identity(A[i]);
+
