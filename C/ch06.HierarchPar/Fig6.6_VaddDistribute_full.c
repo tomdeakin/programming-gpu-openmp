@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include <math.h>
 
@@ -22,5 +24,7 @@ int main()
    for (int i = 0; i < N; i++) {
      assert(fabs(C[i] - 3.0f) < 1.0E-5);
    }
+   printf("Success\n");
+   return EXIT_SUCCESS;
 }
 
