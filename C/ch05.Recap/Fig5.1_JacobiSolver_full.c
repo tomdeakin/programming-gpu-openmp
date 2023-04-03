@@ -33,7 +33,7 @@ void initializeProblem(int N, double *A, double *b, double *xold, double *xnew) 
 
     // scale the row so the final matrix is almost an identity matrix
     for (int j = 0; j < N; j++)
-      A[i * N + i] /= sum;
+      A[i * N + j] /= sum;
   }
 }
 
