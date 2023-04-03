@@ -27,7 +27,6 @@ int main(void) {
   }
   
   #pragma omp target map(A.ptr[:A.N], B.ptr[:B.N], C.ptr[:C.N])
-  #pragma omp target
   #pragma omp loop 
   for (int i = 0; i < N; ++i) {
     C.ptr[i] = A.ptr[i] + B.ptr[i];
