@@ -4,6 +4,12 @@
 #include <math.h>
 #include <assert.h>
 
+void init(double *A, double *B, double *C, const int N) {
+  for (int i = 0; i < N; ++i) {
+    A[i] = 1.0; B[i] = 2.0; C[i] = 0.0;
+  }
+}
+
 int main(void) {
 
   int N = 1000000;
@@ -14,7 +20,7 @@ int main(void) {
   B = malloc(N*sizeof(double));
   C = malloc(N*sizeof(double));
   init(A, B, C, N);
-  
+
   #pragma omp requires unified_shared_memory
   
   #pragma omp target
