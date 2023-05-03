@@ -1,9 +1,7 @@
-
-for (int i = 0; i < N; i++) {
-  for (int j = 0; j < N; j++) {
-    for(int k = 0; k < N; k++) {
+for (int i = 0; i < Ndim; i++) {
+  for (int j = 0; j < Mdim; j++) {
+    for(int k = 0; k < Pdim; k++) {
       C[i*Mdim+j] += A[i*Pdim+k] * B[k*Mdim+j];
     }
   }
 }
-
