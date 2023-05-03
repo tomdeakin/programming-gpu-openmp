@@ -4,7 +4,10 @@ int A[N];
 
 #pragma omp declare target link(A)
 
-#pragma omp target map(tofrom:A[0:N/2])
-for (int i = 0; i < N/2; ++i)
-  A[i] = i;
-
+int main(void) {
+  #pragma omp target map(tofrom:A[0:N/2])
+  for (int i = 0; i < N/2; ++i)
+    A[i] = i;
+  
+  // etc
+}
