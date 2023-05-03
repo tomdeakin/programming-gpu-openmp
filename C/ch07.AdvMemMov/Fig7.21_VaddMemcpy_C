@@ -3,9 +3,9 @@ extern int host_id;
 extern int dev_id;
 
 int N = 1000000;
-double *A = omp_target_malloc(sizeof(double)*N, dev_id);
-double *B = omp_target_malloc(sizeof(double)*N, dev_id);
-double *C = omp_target_malloc(sizeof(double)*N, dev_id);
+double *A = omp_target_alloc(sizeof(double)*N, dev_id);
+double *B = omp_target_alloc(sizeof(double)*N, dev_id);
+double *C = omp_target_alloc(sizeof(double)*N, dev_id);
 
 init(A,B,C,N);
 
