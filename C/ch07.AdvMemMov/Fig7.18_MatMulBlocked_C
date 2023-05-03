@@ -11,13 +11,13 @@ for (int ib = 0; ib < Nblk; ib++) {
   for (int jb = 0; jb < Mblk; jb++) {
 
     // Loop over blocks of rows of A
-    for (kb = 0; kb < Pblk; kb++) {
+    for (int kb = 0; kb < Pblk; kb++) {
 
       // Matrix multiplication within a block
-      for (i = ib * Bsize; i < ((ib+1)*Bsize); i++) {
-        for (j = jb * Bsize; j < ((jb+1)*Bsize); j++) {
-          for(k = kb * Bsize; k < ((kb+1)*Bsize); k++) {
-            C[i*Mdim+j] += Awrk[i*Pdim + k] * B[k*Mdim+j];
+      for (int i = ib * Bsize; i < ((ib+1)*Bsize); i++) {
+        for (int j = jb * Bsize; j < ((jb+1)*Bsize); j++) {
+          for(int k = kb * Bsize; k < ((kb+1)*Bsize); k++) {
+            C[i*Mdim+j] += A[i*Pdim + k] * B[k*Mdim+j];
           }
         }
       }
