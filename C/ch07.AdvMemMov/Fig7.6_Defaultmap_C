@@ -1,6 +1,6 @@
 
 struct point {
-  double x, y;
+  double real, imag;
 };
 
 struct point p = {.real = 0.0, .imag = 0.0};
