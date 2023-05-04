@@ -1,0 +1,12 @@
+
+#pragma omp requires reverse_offload
+
+#pragma omp target
+#pragma omp teams distribute
+for (int i = 0; i < N; ++i) {
+  compute(i);
+
+  #pragma omp target device(ancestor: 1)
+  printf("Completed iteration %d\n", i);
+}
+

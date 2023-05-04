@@ -1,0 +1,11 @@
+
+int num_dev = omp_get_num_devices();
+assert(num_dev > 0);
+
+int last_dev = num_dev - 1;
+
+#pragma omp target device(last_dev)
+{
+  // Target region
+}
+

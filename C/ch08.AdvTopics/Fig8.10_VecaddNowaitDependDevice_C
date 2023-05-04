@@ -1,0 +1,20 @@
+
+#pragma omp target nowait depend(out:A) map(tofrom:A[:N]) device(0)
+#pragma omp loop
+for (int i = 0; i < N; ++i)  A[i] = 1.0;
+
+#pragma omp target nowait depend(out:B) map(tofrom:B[:N]) device(1)
+#pragma omp loop
+for (int i = 0; i < N; ++i)  B[i] = 2.0;
+
+#pragma omp target nowait depend(out:C) map(tofrom:C[:N]) device(2)
+#pragma omp loop
+for (int i = 0; i < N; ++i)  C[i] = 90.0;
+
+
+#pragma omp target nowait depend(in:A,B) depend(inout:C) map(to:A[:N], B[:N]) map(tofrom: C[:N]) device(3)
+#pragma omp loop
+for (int i = 0; i < N; ++i)  C[i] = A[i] + B[i];
+
+#pragma omp taskwait
+
