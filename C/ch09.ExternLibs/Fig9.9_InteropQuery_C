@@ -27,5 +27,6 @@ switch (id) {
     break;
   default:
     // No interop object available
+    ;
 }
 
