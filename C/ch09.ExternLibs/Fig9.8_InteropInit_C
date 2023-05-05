@@ -3,7 +3,7 @@
 omp_interop_t iobj = omp_interop_none;
 
 // Initialize the interop object
-#pragma omp interop init(iobj)
+#pragma omp interop init(target: iobj)
 
 
 // later...

@@ -1,6 +1,6 @@
 
 omp_interop_t iobj = omp_interop_none;
-#pragma omp interop init(iobj)
+#pragma omp interop init(target: iobj)
 int err;
 
 omp_intptr_t id = omp_get_interop_int(iobj, omp_ipr_fr_id, &err);
