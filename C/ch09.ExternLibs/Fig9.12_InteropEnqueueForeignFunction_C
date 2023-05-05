@@ -1,0 +1,16 @@
+
+omp_interop_t iobj = omp_interop_none;
+#pragma omp interop init(targetsync: iobj)
+
+// Check we have a CUDA runtime
+assert(omp_get_interop_int(iobj, omp_ipr_fr_id) == omp_ift_cuda);
+
+// Get CUDA stream
+cudaStream_t s = (cudaStream_t) omp_get_interop_ptr(iobj, omp_ipr_targetsync, NULL);
+
+// Enqueue a CUDA kernel, a non-blocking operation
+kernel<<<blocks, threads, 0, s>>>(/* args */);
+
+#pragma omp interop destroy(iobj)
+// kernel will be finished here
+

@@ -1,0 +1,25 @@
+
+#include <omp.h>
+
+// Optimized version of vecadd written in AVX-512 intrinsics
+void vecadd_avx512(int N, float *A, float *B, float *C);
+
+#pragma omp declare variant(vecadd_avx512) \
+  match(device={isa("core-avx512")})
+void vecadd(int N, float *A, float *B, float *C) { // Base function
+  for (int i = 0; i < N; ++i) {
+    C[i] = A[i] + B[i];
+  }
+}
+
+int main()
+{
+
+   int N = 4000;
+   float A[N], B[N], C[N];  // initialization not shown
+
+   vecadd(N, A, B, C);
+
+   // Check results omitted
+}	  
+

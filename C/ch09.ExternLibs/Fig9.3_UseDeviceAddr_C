@@ -1,0 +1,12 @@
+
+int var = 42;
+#pragma omp target enter data map(to: var)
+
+#pragma omp target data use_device_addr(var)
+{
+  #pragma omp target has_device_addr(var)
+  {
+    // use var ...
+  }
+}
+

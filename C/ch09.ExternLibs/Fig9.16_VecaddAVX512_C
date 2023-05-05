@@ -1,0 +1,23 @@
+
+#define USE_AVX512
+
+void vecadd(int N, float *A, float *B, float *C) { 
+    #ifdef USE_AVX512
+        vecadd_avx512(N, A, B, C); 
+    #else
+        for (int i = 0; i < N; ++i) {
+             C[i] = A[i] + B[i];
+        }
+    #endif
+}
+
+int main()
+{
+   int N = 4000;
+   float A[N], B[N], C[N];  // initialization not shown
+
+   vecadd(N, A, B, C);
+
+   // Check results omitted
+}	
+

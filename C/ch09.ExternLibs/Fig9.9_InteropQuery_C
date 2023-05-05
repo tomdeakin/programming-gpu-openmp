@@ -1,0 +1,31 @@
+
+omp_interop_t iobj = omp_interop_none;
+#pragma omp interop init(iobj)
+int err;
+
+omp_intptr_t id = omp_get_interop_int(iobj, omp_ipr_fr_id, &err);
+assert(err < 0);
+
+switch (id) {
+  case omp_ifr_cuda:
+    call_cuda_code(iobj);
+    break;
+  case omp_ifr_cuda_driver:
+    call_cuda_driver_code(iobj);
+    break;
+  case omp_ifr_opencl:
+    call_opencl_code(iobj);
+    break;
+  case omp_ifr_sycl:
+    call_sycl_code(iobj);
+    break;
+  case omp_ifr_hip:
+    call_hip_code(iobj);
+    break;
+  case omp_ifr_level_zero:
+    call_level_zero_code(iobj);
+    break;
+  default:
+    // No interop object available
+}
+

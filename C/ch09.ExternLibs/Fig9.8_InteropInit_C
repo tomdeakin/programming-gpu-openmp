@@ -1,0 +1,13 @@
+
+// Declare the interop object
+omp_interop_t iobj = omp_interop_none;
+
+// Initialize the interop object
+#pragma omp interop init(iobj)
+
+
+// later...
+
+// Destroy the interop object
+#pragma omp interop destroy(iobj)
+

@@ -1,0 +1,35 @@
+
+// External function requiring NVIDIA GPU device pointers
+void vadd_nvptx(int N, float *A, float *B, float *C, 
+                             omp_interop_t o);
+
+#pragma omp declare variant(vecadd_nvptx) \
+     match(construct={dispatch}, device={arch(nvptx)}) \
+     adjust_args(need_device_ptr: A, B, C) \
+     append_args(interop(targetsync))
+void vecadd_target(int N, float *A, float *B, float *C) {  
+
+  #pragma omp target nowait
+  #pragma omp loop
+  for (int i = 0; i < N; ++i) {
+    C[i] = A[i] + B[i];
+  }
+}
+
+int main()
+{
+
+   int N = 4000;
+   float A[N], B[N], C[N];  // initialization not shown
+
+   // Map to the device
+   #pragma omp target enter data map(to: A, B, C)
+
+   // Run vecadd on a device
+    #pragma omp dispatch nowait depend(inout: C[0:N])
+    vecadd_target(N, A, B, C);
+
+   // Check results and wait for non-blocking
+   // call to vecadd_target() or variant omitted
+}	  
+

@@ -14,8 +14,9 @@ ifneq ($(CC), nvc)
 	$(error Expected the NVHPC compiler. Please choose the appropriate ../make.def file.)
 endif
 CUDA_LIB = $(shell dirname `which nvcc`)/../../cuda/lib64
+CUBLAS_LIB = $(shell dirname `which nvcc`)/../../math_libs/lib64/
 
-EXES=  CUDAKernel$(EXE) PrintfTargetAddresses$(EXE) InteropData$(EXE)
+EXES=  CUDAKernel$(EXE) PrintfTargetAddresses$(EXE) InteropData$(EXE) AssociatePtr$(EXE) InteropCUDA$(EXE) InteropAsync$(EXE)
 
 all: $(EXES)
 
@@ -26,7 +27,19 @@ PrintfTargetAddresses$(EXE): Fig9.2_PrintfTargetAddresses_full.$(OBJ)
 	$(CLINKER) $(CFLAGS) -o PrintfTargetAddresses$(EXE) Fig9.2_PrintfTargetAddresses_full.$(OBJ) $(LIBS)
 
 InteropData$(EXE): Fig9.5_InteropData_full.$(OBJ)
-	$(CLINKER) $(CFLAGS) -o InteropData$(EXE) Fig9.5_InteropData_full.$(OBJ) $(LIBS) -lcudart -lcublas -L$(CUDA_LIB)
+	$(CLINKER) $(CFLAGS) -o InteropData$(EXE) Fig9.5_InteropData_full.$(OBJ) $(LIBS) -lcudart -lcublas -L$(CUDA_LIB) -L$(CUBLAS_LIB)
+
+AssociatePtr$(EXE): Fig9.6_AssociatePtr_full.$(OBJ)
+	$(CLINKER) $(CFLAGS) -o AssociatePtr$(EXE) Fig9.6_AssociatePtr_full.$(OBJ) -lcudart -L$(CUDA_LIB)
+
+InteropCUDA$(EXE): Fig9.7_InteropCUDA_full.$(OBJ)
+	$(CLINKER) $(CFLAGS) -o InteropCUDA$(EXE) Fig9.7_InteropCUDA_full.$(OBJ) $(LIBS) -lcudart -lcublas -L$(CUDA_LIB) -L$(CUBLAS_LIB)
+
+InteropAsync$(EXE): Fig9.15_InteropAsync_full.$(OBJ)
+	$(CLINKER) $(CFLAGS) -o InteropAsync$(EXE) Fig9.15_InteropAsync_full.$(OBJ) $(LIBS) -lcudart -lcublas -L$(CUDA_LIB) -L$(CUBLAS_LIB)
+
+InteropDispatch$(EXE): nvidia.$(OBJ) Fig9.21_InteropDispatch_full.$(OBJ)
+	$(CLINKER) $(CFLAGS) -o InteropDispatch$(EXE) Fig9.21_InteropDispatch_full.$(OBJ) nvidia.$(OBJ) $(LIBS) -lcudart -lcublas -L$(CUDA_LIB) -L$(CUBLAS_LIB)
 
 test: $(EXES)
 	$(PRE)PrintfTargetAddressess$(EXE)
@@ -41,4 +54,4 @@ clean:
 	$(CC) $(CFLAGS) -c $<
 
 .cpp.$(OBJ):
-	$(CC) $(CFLAGS) -c $<
+	$(CPP) $(CFLAGS) -c $<

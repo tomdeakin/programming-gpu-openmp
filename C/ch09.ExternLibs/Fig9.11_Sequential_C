@@ -1,0 +1,6 @@
+
+void update(int *N) {
+  *N = 42;
+  printf("N = %d\n", *N);
+}
+
