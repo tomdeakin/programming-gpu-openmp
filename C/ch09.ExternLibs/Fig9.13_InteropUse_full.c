@@ -1,4 +1,10 @@
+#include <omp.h>
+#include <cuda_runtime.h>
+#include <assert.h>
 
+extern void call_kernel(cudaStream_t s);
+
+int main(void) {
 omp_interop_t iobj = omp_interop_none;
 #pragma omp interop init(targetsync: iobj)
 
@@ -14,7 +20,8 @@ for (int t = 0; t < 1000; ++t) {
   // Previous OpenMP target tasks 
 
   // Enqueue a CUDA kernel, a non-blocking operation
-  kernel<<<blocks, threads, 0, s>>>(/* args */);
+  //kernel<<<blocks, threads, 0, s>>>(/* args */);
+  call_kernel(s);
 
   #pragma omp interop use(iobj)
   // kernel will be finished here
@@ -26,4 +33,4 @@ for (int t = 0; t < 1000; ++t) {
 }
 
 #pragma omp interop destroy(iobj)
-
+}
