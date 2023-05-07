@@ -20,7 +20,8 @@ int main(void) {
   #pragma omp interop init(targetsync: iobj) nowait depend(inout: A)
   
   // Check we have a CUDA runtime
-  assert(omp_get_interop_int(iobj, omp_ipr_fr_id) == omp_ift_cuda);
+  int err;
+  assert(omp_get_interop_int(iobj, omp_ipr_fr_id, &err) == omp_ifr_cuda);
   
   // Get CUDA stream
   cudaStream_t s = (cudaStream_t) omp_get_interop_ptr(iobj, omp_ipr_targetsync, NULL);
