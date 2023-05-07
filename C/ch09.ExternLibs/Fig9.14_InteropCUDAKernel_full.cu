@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <assert.h>
+#include <stdio.h>
 #include <omp.h>
 
 __global__ void cuda_kernel(int *A) {
