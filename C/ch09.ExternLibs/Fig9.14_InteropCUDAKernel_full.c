@@ -1,11 +1,9 @@
 #include <stdlib.h>
-#include <assert.h>
 #include <stdio.h>
 #include <omp.h>
+#include <cuda_runtime.h>
 
-__global__ void cuda_kernel(int *A) {
-  A[threadIdx.x + blockIdx.x * blockDim.x] += 1;
-}
+extern void call_cuda_kernel(int * A, int N, cudaStream_t s);
 
 int main(void) {
 
@@ -13,36 +11,39 @@ int main(void) {
   int *A = (int *)malloc(sizeof(int) * N);
   #pragma omp target enter data map(alloc: A[:N])
   
-  #pragma omp target teams loop nowait depend(out: A)
+  #pragma omp target  
   for (int i = 0; i < N; ++i)
     A[i] = i;
   
   omp_interop_t iobj = omp_interop_none;
-  #pragma omp interop init(targetsync: iobj) nowait depend(inout: A)
+  #pragma omp interop init(targetsync: iobj)  
   
   // Check we have a CUDA runtime
   int err;
-  assert(omp_get_interop_int(iobj, omp_ipr_fr_id, &err) == omp_ifr_cuda);
+  if (omp_get_interop_int(iobj, omp_ipr_fr_id, &err) != omp_ifr_cuda) {
+    printf("Wrong interop runtime\n");
+    exit(EXIT_FAILURE);
+  }
   
   // Get CUDA stream
   cudaStream_t s = (cudaStream_t) omp_get_interop_ptr(iobj, omp_ipr_targetsync, NULL);
   
   // Asynchronously enqueue CUDA kernel on the stream
   #pragma omp target data use_device_ptr(A)
-  cuda_kernel<<<N, 16, 0, s>>>(A);
+  call_cuda_kernel(A, N, s);
   
-  #pragma omp interop use(iobj) nowait depend(inout: A)
+  #pragma omp interop use(iobj)  
   
-  #pragma omp target teams loop nowait depend(inout: A)
+  #pragma omp target  
   for (int i = 0; i < N; ++i)
     A[i] += 1;
   
-  #pragma omp interop use(iobj) nowait depend(inout: A)
+  #pragma omp interop use(iobj)  
   
   #pragma omp target data use_device_ptr(A)
-  cuda_kernel<<<N, 16, 0, s>>>(A);
+  call_cuda_kernel(A, N, s);
   
-  #pragma omp interop destroy(iobj) nowait depend(inout: A)
+  #pragma omp interop destroy(iobj)  
   
   #pragma omp taskwait
 
@@ -50,7 +51,10 @@ int main(void) {
 
   // Check solution
   for (int i = 0; i < N; ++i)
-    assert(A[i] == i + 3);
+    if (A[i] != i + 3) {
+      printf("Incorrect %d\n", A[i]);
+      exit(EXIT_FAILURE);
+    }
 
   printf("Success\n");
 
