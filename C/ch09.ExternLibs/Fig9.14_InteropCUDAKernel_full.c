@@ -11,12 +11,12 @@ int main(void) {
   int *A = (int *)malloc(sizeof(int) * N);
   #pragma omp target enter data map(alloc: A[:N])
   
-  #pragma omp target  
+  #pragma omp target nowait depend(out: A)
   for (int i = 0; i < N; ++i)
     A[i] = i;
   
   omp_interop_t iobj = omp_interop_none;
-  #pragma omp interop init(targetsync: iobj)  
+  #pragma omp interop init(targetsync: iobj) nowait depend(inout: A)
   
   // Check we have a CUDA runtime
   int err;
@@ -32,18 +32,18 @@ int main(void) {
   #pragma omp target data use_device_ptr(A)
   call_cuda_kernel(A, N, s);
   
-  #pragma omp interop use(iobj)  
+  #pragma omp interop use(iobj) nowait depend(inout: A)
   
-  #pragma omp target  
+  #pragma omp target nowait depend(inout: A)
   for (int i = 0; i < N; ++i)
     A[i] += 1;
   
-  #pragma omp interop use(iobj)  
+  #pragma omp interop use(iobj) nowait depend(inout: A)
   
   #pragma omp target data use_device_ptr(A)
   call_cuda_kernel(A, N, s);
   
-  #pragma omp interop destroy(iobj)  
+  #pragma omp interop destroy(iobj) nowait depend(inout: A)
   
   #pragma omp taskwait
 
