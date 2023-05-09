@@ -1,0 +1,10 @@
+
+int N = 1024;
+int* A = malloc(sizeof(int) * N);
+
+#pragma omp target map(A[0:N])
+{
+  // N and the pointer A exist here, as firstprivate variables.
+  // The data pointed to by A _does_ exist here as well!
+}
+

@@ -1,0 +1,7 @@
+
+#pragma omp target enter data map(to: A_old[0:N], A_new[0:N])
+
+// Swap pointers N times
+
+#pragma omp target exit data map(from: A_old[0:N], A_new[0:N])
+

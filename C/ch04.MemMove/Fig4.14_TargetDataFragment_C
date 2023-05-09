@@ -1,0 +1,6 @@
+
+#pragma omp target data map(tofrom: A_old[0:N], A_new[0:N])
+{
+  // Swap pointers N times
+}
+

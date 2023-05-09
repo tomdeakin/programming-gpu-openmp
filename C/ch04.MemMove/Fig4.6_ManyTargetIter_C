@@ -1,0 +1,13 @@
+
+for (int it = 0; it < num_iters; ++it) {
+  #pragma omp target map(A[0:N])
+  {
+    // Iterative_Update the data stored
+    // in A on the target device
+    Iterative_Update(A, it);
+  }
+}
+
+// Then, use A on the host
+use(A);
+
